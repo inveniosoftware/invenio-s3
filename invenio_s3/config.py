@@ -19,6 +19,17 @@ If set to a value (including the "http/https" scheme) it will be passed as
 <https://boto3.readthedocs.io/en/latest/reference/core/session.html#boto3.session.Session.client>`_.
 """
 
+S3_REGION_NAME = None
+"""S3 region name
+
+This is entirely optional, and if not provided, the region name will be 
+automatically set to 'us-east-1'.
+
+If set to a value (including the "http/https" scheme) it will be passed as
+``region_name`` to boto3 `client
+<https://boto3.readthedocs.io/en/latest/reference/core/session.html#boto3.session.Session.client>`_.
+"""
+
 S3_ACCCESS_KEY_ID = None
 """The access key to use when creating the client.
 
