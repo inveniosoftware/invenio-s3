@@ -42,6 +42,10 @@ class InvenioS3(object):
         if s3_endpoint:
             info['client_kwargs']['endpoint_url'] = s3_endpoint
 
+        region_name = current_app.config.get('S3_REGION_NAME', None)
+        if region_name:
+            info['client_kwargs']['region_name'] = region_name
+
         return info
 
     def init_app(self, app):
