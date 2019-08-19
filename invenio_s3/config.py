@@ -22,7 +22,7 @@ If set to a value (including the "http/https" scheme) it will be passed as
 S3_REGION_NAME = None
 """S3 region name
 
-This is entirely optional, and if not provided, the region name will be 
+This is entirely optional, and if not provided, the region name will be
 automatically set to 'us-east-1'.
 
 If set to a value (including the "http/https" scheme) it will be passed as
