@@ -25,8 +25,7 @@ S3_REGION_NAME = None
 This is entirely optional, and if not provided, the region name will be
 automatically set to 'us-east-1'.
 
-If set to a value (including the "http/https" scheme) it will be passed as
-``region_name`` to boto3 `client
+If set to a value it will be passed as ``region_name`` to boto3 `client
 <https://boto3.readthedocs.io/en/latest/reference/core/session.html#boto3.session.Session.client>`_.
 """
 
