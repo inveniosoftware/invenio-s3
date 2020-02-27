@@ -60,6 +60,7 @@ class InvenioS3(object):
                     'S3_SIGNATURE_VERSION', 's3v4'
                 ),
             },
+            default_block_size=current_app.config.get('S3FS_BLOCK_SIZE', None),
         )
 
         s3_endpoint = current_app.config.get('S3_ENDPOINT_URL', None)

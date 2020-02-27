@@ -18,7 +18,7 @@ for each S3 bucket. This is just for simplicity, it can used however needed.
 
 When creating a new location which will use the S3 API, the URI needs to start
 with ``s3://``, for example
-``invenio files location s3_default s3://my-bucket --default`` will
+``invenio files location s3-default s3://my-bucket --default`` will
 create a new location, set it as default location for your instance and use the
 bucket ``my-bucket``. For more information about this command check
 `Invenio-Files-Rest <https://invenio-files-rest.readthedocs.io/en/latest/>`_

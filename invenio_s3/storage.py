@@ -34,13 +34,13 @@ class S3FSFileStorage(PyFSFileStorage):
 
         return (fs, self.fileurl)
 
-    def initialize(self, size=0):
+    def initialize(self, size=0, acl='private'):
         """Initialize file on storage and truncate to given size."""
         fs, path = self._get_fs()
 
         if fs.exists(path):
             fp = fs.rm(path)
-        fp = fs.open(path, mode='wb')
+        fp = fs.open(path, mode='wb', acl=acl)
 
         try:
             to_write = size
@@ -68,16 +68,25 @@ class S3FSFileStorage(PyFSFileStorage):
             fs.rm(path)
         return True
 
+    def open(self, mode='rb', acl='private'):
+        """Open file.
+
+        The caller is responsible for closing the file.
+        """
+        fs, path = self._get_fs()
+        return fs.open(path, mode=mode, acl=acl)
+
     def update(self,
                incoming_stream,
                seek=0,
                size=None,
                chunk_size=None,
+               acl='private',
                progress_callback=None):
         """Update a file in the file system."""
         old_fp = self.open(mode='rb')
         updated_fp = S3FSFileStorage(
-            self.fileurl, size=self._size).open(mode='wb')
+            self.fileurl, size=self._size).open(mode='wb', acl=acl)
         try:
             if seek >= 0:
                 to_write = seek
