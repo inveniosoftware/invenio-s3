@@ -48,7 +48,7 @@ setup_requires = [
 install_requires = [
     'boto3>=1.9.83',
     'invenio-files-rest>=1.0.0',
-    's3fs>=0.1.5,<0.3.0', # Newer versions only allow python >= 3.5
+    's3fs>=0.3.0',
 ]
 
 packages = find_packages()
@@ -93,10 +93,10 @@ setup(
         'Programming Language :: Python',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Development Status :: 4 - Beta',
     ],
 )
