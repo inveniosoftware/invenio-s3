@@ -87,7 +87,7 @@ def test_initialize_failcleanup(monkeypatch, s3_bucket, s3fs):
 
 def test_delete(s3_bucket, s3fs_testpath, s3fs):
     """Test delete."""
-    s3_bucket.upload_fileobj(BytesIO(b'test'), 'path/to/data')
+    s3fs.save(BytesIO(b'test'))
 
     objs = list(s3_bucket.objects.all())
     assert len(objs) == 1
