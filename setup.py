@@ -15,9 +15,9 @@ history = open('CHANGES.rst').read()
 
 tests_require = [
     'pytest-invenio>=1.4.0',
-    'invenio-base>=1.2.2',
+    'invenio-base>=1.2.3',
     'invenio-app>=1.2.3',
-    'invenio-db[all]>=1.0.4',
+    'invenio-db[all]>=1.0.8',
     'moto>=1.3.7',
     'redis>=2.10.5',
 ]
@@ -38,9 +38,9 @@ setup_requires = [
 ]
 
 install_requires = [
-    'boto3>=1.9.83',
+    'boto3>=1.9.91,<=1.14.44',
     'invenio-files-rest>=1.0.0',
-    's3fs>=0.3.0',
+    's3fs>=0.3.0,<0.4.0',
 ]
 
 packages = find_packages()
