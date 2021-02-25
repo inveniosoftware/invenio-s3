@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2018, 2019, 2020 Esteban J. G. Gabancho.
+# Copyright (C) 2018, 2019, 2020, 2021 Esteban J. G. Gabancho.
 #
 # Invenio-S3 is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -8,6 +8,7 @@
 from __future__ import absolute_import, division, print_function
 
 from functools import partial, wraps
+from math import ceil
 
 import s3fs
 from flask import current_app
@@ -23,7 +24,7 @@ def set_blocksize(f):
     def inner(self, *args, **kwargs):
         size = kwargs.get('size', None)
         block_size = (
-            size // current_app.config['S3_MAXIMUM_NUMBER_OF_PARTS']  # Integer
+            ceil(size / current_app.config['S3_MAXIMUM_NUMBER_OF_PARTS'])
             if size
             else current_app.config['S3_DEFAULT_BLOCK_SIZE']
         )

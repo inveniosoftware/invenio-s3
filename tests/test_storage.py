@@ -367,14 +367,18 @@ def test_non_unicode_filename(base_app, s3fs):
 
 def test_block_size(appctx, s3_bucket, s3fs_testpath, s3fs, get_md5):
     """Test block size update on the S3FS client."""
-    # Set file size to 4 times the default block size
-    data = b'a' * appctx.config['S3_DEFAULT_BLOCK_SIZE'] * 4
-    # Set the number of maximum parts to two
-    appctx.config['S3_MAXIMUM_NUMBER_OF_PARTS'] = 2
+    # Make file bigger than max number of parts * block size
+    data = b'a' * appctx.config['S3_DEFAULT_BLOCK_SIZE'] * 5
+    # Set max number of parts that size(data)/num parts > block size
+    # 3 parts makes a division result with a floating value smaller than .5
+    appctx.config['S3_MAXIMUM_NUMBER_OF_PARTS'] = 3
     uri, size, checksum = s3fs.save(BytesIO(data),
                                     size=len(data))
-    # The block size should be 2 times the default block size
-    assert s3fs.block_size == appctx.config['S3_DEFAULT_BLOCK_SIZE'] * 2
+
+    assert (
+        len(data) / s3fs.block_size
+        <= appctx.config['S3_MAXIMUM_NUMBER_OF_PARTS']
+    )
     assert uri == s3fs_testpath
     assert size == len(data)
     assert checksum == get_md5(data)
