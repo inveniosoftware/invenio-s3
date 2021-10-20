@@ -15,8 +15,8 @@ history = open('CHANGES.rst').read()
 
 tests_require = [
     'pytest-invenio>=1.4.2',
-    'invenio-base>=1.2.3',
-    'invenio-app>=1.2.3',
+    'invenio-base>=1.2.5',
+    'invenio-app>=1.3.1',
     'invenio-db[all]>=1.0.9',
     'moto>=1.3.7',
     'redis>=2.10.5',
@@ -25,7 +25,7 @@ tests_require = [
 extras_require = {
     'docs': [
         'Sphinx>=3.0.1,<3.0.2',
-    ],
+],
     'tests': tests_require,
 }
 
@@ -39,7 +39,7 @@ setup_requires = [
 
 install_requires = [
     'boto3>=1.9.91,<=1.14.44',
-    'invenio-files-rest>=1.0.0',
+    'invenio-files-rest>=1.3.0',
     's3fs>=0.3.0,<0.4.0',
 ]
 

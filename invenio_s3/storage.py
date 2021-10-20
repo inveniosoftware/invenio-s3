@@ -4,8 +4,8 @@
 #
 # Invenio-S3 is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
+
 """S3 file storage interface."""
-from __future__ import absolute_import, division, print_function
 
 from functools import partial, wraps
 from math import ceil

@@ -4,13 +4,14 @@
 #
 # Invenio-S3 is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
+
 """File serving helpers for S3 files."""
 
 import mimetypes
 import unicodedata
 
 from flask import current_app
-from invenio_files_rest.helpers import chunk_size_or_default, sanitize_mimetype
+from invenio_files_rest.helpers import sanitize_mimetype
 from werkzeug.datastructures import Headers
 from werkzeug.urls import url_quote
 
