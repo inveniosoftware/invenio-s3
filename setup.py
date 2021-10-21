@@ -38,9 +38,9 @@ setup_requires = [
 ]
 
 install_requires = [
-    'boto3>=1.9.91,<=1.14.44',
+    'boto3>=1.9.91',
     'invenio-files-rest>=1.3.0',
-    's3fs>=0.3.0,<0.4.0',
+    's3fs>=0.3.0',
 ]
 
 packages = find_packages()
