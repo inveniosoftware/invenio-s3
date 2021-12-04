@@ -24,7 +24,7 @@ tests_require = [
 
 extras_require = {
     'docs': [
-        'Sphinx>=3.0.1,<3.0.2',
+        'Sphinx==4.2.0',
 ],
     'tests': tests_require,
 }
@@ -32,10 +32,6 @@ extras_require = {
 extras_require['all'] = []
 for reqs in extras_require.values():
     extras_require['all'].extend(reqs)
-
-setup_requires = [
-    'pytest-runner>=3.0.0,<5',
-]
 
 install_requires = [
     'boto3>=1.9.91',
@@ -75,7 +71,6 @@ setup(
     },
     extras_require=extras_require,
     install_requires=install_requires,
-    setup_requires=setup_requires,
     tests_require=tests_require,
     classifiers=[
         'Environment :: Web Environment',
