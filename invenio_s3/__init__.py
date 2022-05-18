@@ -45,7 +45,8 @@ from __future__ import absolute_import, print_function
 
 from .ext import InvenioS3
 from .storage import S3FSFileStorage, s3fs_storage_factory
-from .version import __version__
+
+__version__ = '1.0.6'
 
 __all__ = (
     '__version__',
