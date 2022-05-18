@@ -57,7 +57,7 @@ See `Amazon Boto3 documentation on presigned URLs
 for more information.
 """
 
-S3_SIGNATURE_VERSION = 's3v4'
+S3_SIGNATURE_VERSION = "s3v4"
 """Version of the S3 signature algorithm. Can be 's3' (v2) or 's3v4' (v4).
 See `Amazon Boto3 documentation on configuration variables
 <https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html#configuration-file>`_

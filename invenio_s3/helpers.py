@@ -16,12 +16,14 @@ from werkzeug.datastructures import Headers
 from werkzeug.urls import url_quote
 
 
-def redirect_stream(s3_url_builder,
-                    filename,
-                    mimetype=None,
-                    restricted=True,
-                    as_attachment=False,
-                    trusted=False):
+def redirect_stream(
+    s3_url_builder,
+    filename,
+    mimetype=None,
+    restricted=True,
+    as_attachment=False,
+    trusted=False,
+):
     """Redirect to URL to serve the file directly from there.
 
     :param url: redirection URL
@@ -32,7 +34,7 @@ def redirect_stream(s3_url_builder,
     if mimetype is None and filename:
         mimetype = mimetypes.guess_type(filename)[0]
     if mimetype is None:
-        mimetype = 'application/octet-stream'
+        mimetype = "application/octet-stream"
 
     # Construct headers
     headers = Headers()
@@ -42,38 +44,40 @@ def redirect_stream(s3_url_builder,
         mimetype = sanitize_mimetype(mimetype, filename=filename)
         # See https://www.owasp.org/index.php/OWASP_Secure_Headers_Project
         # Prevent JavaScript execution
-        headers['Content-Security-Policy'] = "default-src 'none';"
+        headers["Content-Security-Policy"] = "default-src 'none';"
         # Prevent MIME type sniffing for browser.
-        headers['X-Content-Type-Options'] = 'nosniff'
+        headers["X-Content-Type-Options"] = "nosniff"
         # Prevent opening of downloaded file by IE
-        headers['X-Download-Options'] = 'noopen'
+        headers["X-Download-Options"] = "noopen"
         # Prevent cross domain requests from Flash/Acrobat.
-        headers['X-Permitted-Cross-Domain-Policies'] = 'none'
+        headers["X-Permitted-Cross-Domain-Policies"] = "none"
         # Prevent files from being embedded in frame, iframe and object tags.
-        headers['X-Frame-Options'] = 'deny'
+        headers["X-Frame-Options"] = "deny"
         # Enable XSS protection (IE, Chrome, Safari)
-        headers['X-XSS-Protection'] = '1; mode=block'
+        headers["X-XSS-Protection"] = "1; mode=block"
 
     # Force Content-Disposition for application/octet-stream to prevent
     # Content-Type sniffing.
-    if as_attachment or mimetype == 'application/octet-stream':
+    if as_attachment or mimetype == "application/octet-stream":
         # See https://github.com/pallets/flask/commit/0049922f2e690a6d
         try:
-            filenames = {'filename': filename.encode('latin-1')}
+            filenames = {"filename": filename.encode("latin-1")}
         except UnicodeEncodeError:
-            filenames = {'filename*': "UTF-8''%s" % url_quote(filename)}
-            encoded_filename = (unicodedata.normalize('NFKD', filename).encode(
-                'latin-1', 'ignore'))
+            filenames = {"filename*": "UTF-8''%s" % url_quote(filename)}
+            encoded_filename = unicodedata.normalize("NFKD", filename).encode(
+                "latin-1", "ignore"
+            )
             if encoded_filename:
-                filenames['filename'] = encoded_filename
-        headers.add('Content-Disposition', 'attachment', **filenames)
+                filenames["filename"] = encoded_filename
+        headers.add("Content-Disposition", "attachment", **filenames)
     else:
-        headers.add('Content-Disposition', 'inline')
+        headers.add("Content-Disposition", "inline")
 
     url = s3_url_builder(
         ResponseContentType=mimetype,
-        ResponseContentDisposition=headers.get('Content-Disposition'))
-    headers['Location'] = url
+        ResponseContentDisposition=headers.get("Content-Disposition"),
+    )
+    headers["Location"] = url
 
     # TODO: Set cache-control
     # if not restricted:

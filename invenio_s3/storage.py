@@ -20,13 +20,14 @@ from .helpers import redirect_stream
 
 def set_blocksize(f):
     """Decorator to set the correct block size according to file size."""
+
     @wraps(f)
     def inner(self, *args, **kwargs):
-        size = kwargs.get('size', None)
+        size = kwargs.get("size", None)
         block_size = (
-            ceil(size / current_app.config['S3_MAXIMUM_NUMBER_OF_PARTS'])
+            ceil(size / current_app.config["S3_MAXIMUM_NUMBER_OF_PARTS"])
             if size
-            else current_app.config['S3_DEFAULT_BLOCK_SIZE']
+            else current_app.config["S3_DEFAULT_BLOCK_SIZE"]
         )
 
         if block_size > self.block_size:
@@ -41,15 +42,15 @@ class S3FSFileStorage(PyFSFileStorage):
 
     def __init__(self, fileurl, **kwargs):
         """Storage initialization."""
-        self.block_size = current_app.config['S3_DEFAULT_BLOCK_SIZE']
+        self.block_size = current_app.config["S3_DEFAULT_BLOCK_SIZE"]
         super(S3FSFileStorage, self).__init__(fileurl, **kwargs)
 
     def _get_fs(self, *args, **kwargs):
         """Get PyFilesystem instance and S3 real path."""
-        if not self.fileurl.startswith('s3://'):
+        if not self.fileurl.startswith("s3://"):
             return super(S3FSFileStorage, self)._get_fs(*args, **kwargs)
 
-        info = current_app.extensions['invenio-s3'].init_s3fs_info
+        info = current_app.extensions["invenio-s3"].init_s3fs_info
         fs = s3fs.S3FileSystem(default_block_size=self.block_size, **info)
 
         return (fs, self.fileurl)
@@ -61,7 +62,7 @@ class S3FSFileStorage(PyFSFileStorage):
 
         if fs.exists(path):
             fp = fs.rm(path)
-        fp = fs.open(path, mode='wb')
+        fp = fs.open(path, mode="wb")
 
         try:
             to_write = size
@@ -70,7 +71,7 @@ class S3FSFileStorage(PyFSFileStorage):
                 current_chunk_size = (
                     to_write if to_write <= fs_chunk_size else fs_chunk_size
                 )
-                fp.write(b'\0' * current_chunk_size)
+                fp.write(b"\0" * current_chunk_size)
                 to_write -= current_chunk_size
         except Exception:
             fp.close()
@@ -100,19 +101,15 @@ class S3FSFileStorage(PyFSFileStorage):
         progress_callback=None,
     ):
         """Update a file in the file system."""
-        old_fp = self.open(mode='rb')
-        updated_fp = S3FSFileStorage(self.fileurl, size=self._size).open(
-            mode='wb'
-        )
+        old_fp = self.open(mode="rb")
+        updated_fp = S3FSFileStorage(self.fileurl, size=self._size).open(mode="wb")
         try:
             if seek >= 0:
                 to_write = seek
                 fs_chunk_size = updated_fp.blocksize
                 while to_write > 0:
                     current_chunk_size = (
-                        to_write
-                        if to_write <= fs_chunk_size
-                        else fs_chunk_size
+                        to_write if to_write <= fs_chunk_size else fs_chunk_size
                     )
                     updated_fp.write(old_fp.read(current_chunk_size))
                     to_write -= current_chunk_size
@@ -131,9 +128,7 @@ class S3FSFileStorage(PyFSFileStorage):
                 fs_chunk_size = updated_fp.blocksize
                 while to_write > 0:
                     current_chunk_size = (
-                        to_write
-                        if to_write <= fs_chunk_size
-                        else fs_chunk_size
+                        to_write if to_write <= fs_chunk_size else fs_chunk_size
                     )
                     updated_fp.write(old_fp.read(current_chunk_size))
                     to_write -= current_chunk_size
@@ -157,7 +152,7 @@ class S3FSFileStorage(PyFSFileStorage):
         try:
             fs, path = self._get_fs()
             s3_url_builder = partial(
-                fs.url, path, expires=current_app.config['S3_URL_EXPIRATION']
+                fs.url, path, expires=current_app.config["S3_URL_EXPIRATION"]
             )
 
             return redirect_stream(
@@ -169,7 +164,7 @@ class S3FSFileStorage(PyFSFileStorage):
                 as_attachment=as_attachment,
             )
         except Exception as e:
-            raise StorageError('Could not send file: {}'.format(e))
+            raise StorageError("Could not send file: {}".format(e))
 
     @set_blocksize
     def copy(self, src, *args, **kwargs):
@@ -178,7 +173,7 @@ class S3FSFileStorage(PyFSFileStorage):
         If the source is an S3 stored object the copy process happens on the S3
         server side, otherwise we use the normal ``FileStorage`` copy method.
         """
-        if src.fileurl.startswith('s3://'):
+        if src.fileurl.startswith("s3://"):
             fs, path = self._get_fs()
             fs.copy(src.fileurl, path)
         else:

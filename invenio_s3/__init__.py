@@ -46,11 +46,11 @@ from __future__ import absolute_import, print_function
 from .ext import InvenioS3
 from .storage import S3FSFileStorage, s3fs_storage_factory
 
-__version__ = '1.0.6'
+__version__ = "1.0.6"
 
 __all__ = (
-    '__version__',
-    'InvenioS3',
-    'S3FSFileStorage',
-    's3fs_storage_factory',
+    "__version__",
+    "InvenioS3",
+    "S3FSFileStorage",
+    "s3fs_storage_factory",
 )
