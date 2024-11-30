@@ -1,10 +1,16 @@
 ..
     Copyright (C) 2018, 2019, 2020 Esteban J. G. Gabancho.
+    Copyright (C) 2024 Graz University of Technology.
     Invenio-S3 is free software; you can redistribute it and/or modify it
     under the terms of the MIT License; see LICENSE file for more details.
 
 Changes
 =======
+
+Version 2.0.0 (release 2024-12-10)
+
+- filename: replace encoding/decoding
+- setup: bump major dependencies
 
 Version 1.0.7 (release 2024-11-30)
 

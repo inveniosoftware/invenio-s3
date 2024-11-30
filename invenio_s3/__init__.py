@@ -2,6 +2,7 @@
 #
 # Copyright (C) 2018, 2019, 2020 Esteban J. G. Gabancho.
 # Copyright (C) 2024 KTH Royal Institute of Technology.
+# Copyright (C) 2024 Graz University of Technology.
 #
 # Invenio-S3 is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -45,7 +46,7 @@ more detailed description in :any:`configuration`.
 from .ext import InvenioS3
 from .storage import S3FSFileStorage, s3fs_storage_factory
 
-__version__ = "1.0.7"
+__version__ = "2.0.0"
 
 __all__ = (
     "__version__",
