@@ -45,7 +45,7 @@ more detailed description in :any:`configuration`.
 from .ext import InvenioS3
 from .storage import S3FSFileStorage, s3fs_storage_factory
 
-__version__ = "1.0.6"
+__version__ = "2.0.0"
 
 __all__ = (
     "__version__",

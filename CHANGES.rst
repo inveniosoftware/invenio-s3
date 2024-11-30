@@ -6,6 +6,21 @@
 Changes
 =======
 
+Version 2.0.0 (release 2024-11-30)
+
+- setup: bump major dependencies
+- Update GitHub Actions versions
+- Update Python versions in workflows
+- remove future imports
+- Update dependencies and fix import in conftest.py
+- global: fix revision id due to rebase
+- fix docs compatibilty problem with Sphinx>=5.0.0
+- global: clean test infrastructure
+- add .git-blame-ignore-revs
+- migrate to use black as opinionated auto formater
+- migrate setup.py to setup.cfg
+- global: fix ci
+
 Version 1.0.6 (released 2021-10-21)
 
 - Unpin boto3 and s3fs
