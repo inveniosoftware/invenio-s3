@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2018, 2019 Esteban J. G. Gabancho.
+# Copyright (C) 2024 Graz University of Technology.
 #
 # Invenio-S3 is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -9,11 +10,11 @@
 
 import mimetypes
 import unicodedata
+from urllib.parse import quote
 
 from flask import current_app
 from invenio_files_rest.helpers import sanitize_mimetype
 from werkzeug.datastructures import Headers
-from werkzeug.urls import url_quote
 
 
 def redirect_stream(
@@ -59,16 +60,17 @@ def redirect_stream(
     # Force Content-Disposition for application/octet-stream to prevent
     # Content-Type sniffing.
     if as_attachment or mimetype == "application/octet-stream":
-        # See https://github.com/pallets/flask/commit/0049922f2e690a6d
+        # see https://github.com/pallets/werkzeug/blob/main/src/werkzeug/utils.py#L456-L465
         try:
-            filenames = {"filename": filename.encode("latin-1")}
+            filename.encode("ascii")
         except UnicodeEncodeError:
-            filenames = {"filename*": "UTF-8''%s" % url_quote(filename)}
-            encoded_filename = unicodedata.normalize("NFKD", filename).encode(
-                "latin-1", "ignore"
-            )
-            if encoded_filename:
-                filenames["filename"] = encoded_filename
+            simple = unicodedata.normalize("NFKD", filename)
+            simple = simple.encode("ascii", "ignore").decode("ascii")
+            # safe = RFC 5987 attr-char
+            quoted = quote(filename, safe="!#$&+-.^_`|~")
+            filenames = {"filename": simple, "filename*": f"UTF-8''{quoted}"}
+        else:
+            filenames = {"filename": filename}
         headers.add("Content-Disposition", "attachment", **filenames)
     else:
         headers.add("Content-Disposition", "inline")
