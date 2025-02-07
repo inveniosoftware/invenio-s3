@@ -9,7 +9,6 @@
 
 import warnings
 
-import boto3
 from flask import current_app
 from werkzeug.utils import cached_property
 
@@ -59,6 +58,12 @@ class InvenioS3(object):
                 },
                 "signature_version": current_app.config.get(
                     "S3_SIGNATURE_VERSION", "s3v4"
+                ),
+                "request_checksum_calculation": current_app.config.get(
+                    "S3_REQUEST_CHECKSUM_CALCULATION", "WHEN_REQUIRED"
+                ),
+                "response_checksum_validation": current_app.config.get(
+                    "S3_RESPONSE_CHECKSUM_VALIDATION", "WHEN_REQUIRED"
                 ),
             },
         )
