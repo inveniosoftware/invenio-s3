@@ -75,9 +75,9 @@ S3_DEFAULT_BLOCK_SIZE = 5 * 2**20
 """Default block size value used to send multi-part uploads to S3.
 Typically 5Mb is minimum allowed by the API."""
 
-S3_REQUEST_CHECKSUM_CALCULATION = "WHEN_REQUIRED"
-S3_RESPONSE_CHECKSUM_VALIDATION = "WHEN_REQUIRED"
+S3_REQUEST_CHECKSUM_CALCULATION = "WHEN_SUPPORTED"
+S3_RESPONSE_CHECKSUM_VALIDATION = "WHEN_SUPPORTED"
 """Newer versions of AWS S3 force integrity protections that may/may not be supported be alternate implementations.
-See <https://github.com/boto/boto3/issues/4392>. Everybody using AWS S3 can set this to 'WHEN_SUPPORTED', compare the
-docs at <https://docs.aws.amazon.com/sdkref/latest/guide/feature-dataintegrity.html>.
+See <https://github.com/boto/boto3/issues/4392>. Everybody using non AWS S3 providers can set this to 'WHEN_REQUIRED',
+compare the docs at <https://docs.aws.amazon.com/sdkref/latest/guide/feature-dataintegrity.html>.
 """

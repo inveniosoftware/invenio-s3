@@ -60,10 +60,10 @@ class InvenioS3(object):
                     "S3_SIGNATURE_VERSION", "s3v4"
                 ),
                 "request_checksum_calculation": current_app.config.get(
-                    "S3_REQUEST_CHECKSUM_CALCULATION", "WHEN_REQUIRED"
+                    "S3_REQUEST_CHECKSUM_CALCULATION", "WHEN_SUPPORTED"
                 ),
                 "response_checksum_validation": current_app.config.get(
-                    "S3_RESPONSE_CHECKSUM_VALIDATION", "WHEN_REQUIRED"
+                    "S3_RESPONSE_CHECKSUM_VALIDATION", "WHEN_SUPPORTED"
                 ),
             },
         )
