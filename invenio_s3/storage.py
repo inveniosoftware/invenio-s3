@@ -207,7 +207,7 @@ class S3FSFileStorage(PyFSFileStorage):
         """Get a low-level file object.
 
         :param upload_id: The upload ID of the multipart upload, can be none to get a new upload.
-        :returns: an instance of LowLevelS3File.
+        :returns: an instance of MultipartS3File.
         """
         # WARNING: low-level code. The underlying s3fs currently does not have support
         # for multipart uploads without keeping the S3File instance in memory between requests.
@@ -231,6 +231,7 @@ class S3FSFileStorage(PyFSFileStorage):
 
         :param multipart_metadata: The metadata returned by the multipart_initialize_upload
             and the metadata returned by the multipart_set_content for each part.
+        :returns: The Etag of the completed upload.
         """
         f = self.multipart_file(multipart_metadata["uploadId"])
         expected_parts = int(multipart_metadata["parts"])
@@ -239,7 +240,9 @@ class S3FSFileStorage(PyFSFileStorage):
             raise ValueError(
                 f"Not all parts were uploaded, got {len(parts)} out of {expected_parts} parts."
             )
-        f.complete_multipart_upload(parts)
+        completed_response = f.complete_multipart_upload(parts)
+        # in S3, the Etag is the md5 checksum of the md5checksums of the parts
+        return completed_response.get("ETag", None).strip('"')
 
     def multipart_abort_upload(self, **multipart_metadata):
         """Abort the multipart upload.

@@ -13,7 +13,7 @@ import datetime
 # WARNING: low-level code. The underlying s3fs currently does not have support
 # for multipart uploads without keeping the S3File instance in memory between requests.
 # To overcome this limitation, we have to use the low-level API directly separated in the
-# LowLevelS3File class.
+# MultipartS3File class.
 
 
 class MultipartS3File:
