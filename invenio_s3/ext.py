@@ -48,6 +48,7 @@ class InvenioS3(object):
                 DeprecationWarning,
             )
 
+        s3_config_extra = current_app.config.get("S3_CONFIG_EXTRA", {})
         info = dict(
             key=current_app.config.get("S3_ACCESS_KEY_ID", ""),
             secret=current_app.config.get("S3_SECRET_ACCESS_KEY", ""),
@@ -59,12 +60,7 @@ class InvenioS3(object):
                 "signature_version": current_app.config.get(
                     "S3_SIGNATURE_VERSION", "s3v4"
                 ),
-                "request_checksum_calculation": current_app.config.get(
-                    "S3_REQUEST_CHECKSUM_CALCULATION", "WHEN_SUPPORTED"
-                ),
-                "response_checksum_validation": current_app.config.get(
-                    "S3_RESPONSE_CHECKSUM_VALIDATION", "WHEN_SUPPORTED"
-                ),
+                **s3_config_extra,
             },
         )
 
