@@ -6,13 +6,13 @@
 # Invenio-S3 is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 """Pytest configuration."""
-import hashlib
 
-import boto3
+import hashlib
+import os
+
 import pytest
-from flask import current_app
+import s3fs as _s3fs
 from invenio_app.factory import create_api
-from moto import mock_aws
 
 from invenio_s3 import S3FSFileStorage
 
@@ -20,11 +20,11 @@ from invenio_s3 import S3FSFileStorage
 @pytest.fixture(scope="module")
 def app_config(app_config):
     """Customize application configuration."""
-    app_config["FILES_REST_STORAGE_FACTORY"] = "invenio_s3.s3fs_storage_factory"
-    app_config["S3_ENDPOINT_URL"] = None
-    app_config["S3_ACCESS_KEY_ID"] = "test"
-    app_config["S3_SECRECT_ACCESS_KEY"] = "test"
     app_config["THEME_FRONTPAGE"] = False
+    app_config["FILES_REST_STORAGE_FACTORY"] = "invenio_s3.s3fs_storage_factory"
+    app_config["S3_ENDPOINT_URL"] = os.environ["S3_ENDPOINT_URL"]
+    app_config["S3_ACCESS_KEY_ID"] = os.environ["S3_ACCESS_KEY_ID"]
+    app_config["S3_SECRET_ACCESS_KEY"] = os.environ["S3_SECRET_ACCESS_KEY"]
     return app_config
 
 
@@ -34,39 +34,42 @@ def create_app():
     return create_api
 
 
-@pytest.fixture(scope="function")
-def s3_bucket(appctx):
-    """S3 bucket fixture."""
-    with mock_aws():
-        session = boto3.Session(
-            aws_access_key_id=current_app.config.get("S3_ACCESS_KEY_ID"),
-            aws_secret_access_key=current_app.config.get("S3_SECRECT_ACCESS_KEY"),
-        )
-        s3 = session.resource("s3")
-        bucket = s3.create_bucket(Bucket="test_invenio_s3")
-
-        yield bucket
-
-        for obj in bucket.objects.all():
-            obj.delete()
-        bucket.delete()
+@pytest.fixture(scope="module")
+def s3fs(app_config):
+    """S3 client."""
+    return _s3fs.S3FileSystem(
+        endpoint_url=app_config["S3_ENDPOINT_URL"],
+        key=app_config["S3_ACCESS_KEY_ID"],
+        secret=app_config["S3_SECRET_ACCESS_KEY"],
+    )
 
 
-@pytest.fixture(scope="function")
-def s3fs_testpath(s3_bucket):
+@pytest.fixture()
+def s3_bucket():
     """S3 test path."""
-    return "s3://{}/path/to/data".format(s3_bucket.name)
+    return "s3://default"
+
+
+@pytest.fixture()
+def s3_path():
+    """S3 test path."""
+    return "s3://default/file.txt"
 
 
 @pytest.fixture(scope="function")
-def s3fs(s3_bucket, s3fs_testpath):
+def s3_storage(appctx, s3_path, s3fs):
     """Instance of S3FSFileStorage."""
-    s3_storage = S3FSFileStorage(s3fs_testpath)
-    return s3_storage
+    s3_storage = S3FSFileStorage(s3_path)
+    yield s3_storage
+    try:
+        s3fs.rm(s3_path, recursive=True)
+    except FileNotFoundError:
+        # Some times we delete the file in the tests
+        pass
 
 
 @pytest.fixture
-def file_instance_mock(s3fs_testpath):
+def file_instance_mock(appctx, s3_path):
     """Mock of a file instance."""
 
     class FileInstance(object):
@@ -76,7 +79,7 @@ def file_instance_mock(s3fs_testpath):
 
     return FileInstance(
         id="deadbeef-65bd-4d9b-93e2-ec88cc59aec5",
-        uri=s3fs_testpath,
+        uri=s3_path,
         size=4,
         updated=None,
     )

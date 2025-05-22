@@ -7,8 +7,6 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 """S3 file storage support for Invenio."""
 
-import warnings
-
 from flask import current_app
 from werkzeug.utils import cached_property
 
@@ -26,28 +24,6 @@ class InvenioS3(object):
     @cached_property
     def init_s3fs_info(self):
         """Gather all the information needed to start the S3FSFileSystem."""
-        if "S3_ACCCESS_KEY_ID" in current_app.config:
-            current_app.config["S3_ACCESS_KEY_ID"] = current_app.config[
-                "S3_ACCCESS_KEY_ID"
-            ]
-            warnings.warn(
-                "Key S3_ACCCESS_KEY_ID contained a typo and has been "
-                "corrected to S3_ACCESS_KEY_ID, support for the "
-                "flawed version will be removed.",
-                DeprecationWarning,
-            )
-
-        if "S3_SECRECT_ACCESS_KEY" in current_app.config:
-            current_app.config["S3_SECRET_ACCESS_KEY"] = current_app.config[
-                "S3_SECRECT_ACCESS_KEY"
-            ]
-            warnings.warn(
-                "Key S3_SECRECT_ACCESS_KEY contained a typo and has been "
-                "corrected to S3_SECRET_ACCESS_KEY, support for the "
-                "flawed version will be removed.",
-                DeprecationWarning,
-            )
-
         s3_config_extra = current_app.config.get("S3_CONFIG_EXTRA", {})
         info = dict(
             key=current_app.config.get("S3_ACCESS_KEY_ID", ""),
