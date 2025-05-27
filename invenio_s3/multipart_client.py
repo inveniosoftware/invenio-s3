@@ -10,6 +10,8 @@
 
 from datetime import datetime, timedelta, timezone
 
+from fsspec.asyn import sync
+
 # WARNING: low-level code. The underlying s3fs currently does not have support
 # for multipart uploads without keeping the S3File instance in memory between requests.
 # To overcome this limitation, we have to use the low-level API directly separated in the
@@ -38,8 +40,12 @@ class MultipartS3File:
 
         :returns: The upload ID of the multipart upload.
         """
-        mpu = self.s3_client.create_multipart_upload(
-            Bucket=self.bucket, Key=self.key, ACL=self.acl
+        mpu = sync(
+            self.fs.loop,
+            self.s3_client.create_multipart_upload,
+            Bucket=self.bucket,
+            Key=self.key,
+            ACL=self.acl,
         )
         # TODO: error handling here
         self.upload_id = mpu["UploadId"]
@@ -51,7 +57,9 @@ class MultipartS3File:
         :param max_parts: The maximum number of parts to list.
         :returns: The list of parts, including checksums and etags.
         """
-        ret = self.s3_client.list_parts(
+        ret = sync(
+            self.fs.loop,
+            self.s3_client.list_parts,
             Bucket=self.bucket,
             Key=self.key,
             UploadId=self.upload_id,
@@ -66,7 +74,9 @@ class MultipartS3File:
         :param part_number: The part number.
         :param data: The data to upload.
         """
-        part = self.s3_client.upload_part(
+        part = sync(
+            self.fs.loop,
+            self.s3_client.upload_part,
             Bucket=self.bucket,
             Key=self.key,
             UploadId=self.upload_id,
@@ -111,7 +121,9 @@ class MultipartS3File:
             "parts": [
                 {
                     "part": part + 1,
-                    "url": self.s3_client.generate_presigned_url(
+                    "url": sync(
+                        self.fs.loop,
+                        self.s3_client.generate_presigned_url,
                         "upload_part",
                         Params={
                             "Bucket": self.bucket,
@@ -132,7 +144,9 @@ class MultipartS3File:
 
         :param parts: The list of parts (as from self.get_parts), including checksums and etags.
         """
-        return self.s3_client.complete_multipart_upload(
+        return sync(
+            self.fs.loop,
+            self.s3_client.complete_multipart_upload,
             Bucket=self.bucket,
             Key=self.key,
             UploadId=self.upload_id,
@@ -145,6 +159,10 @@ class MultipartS3File:
 
     def abort_multipart_upload(self):
         """Abort the multipart upload."""
-        return self.s3_client.abort_multipart_upload(
-            Bucket=self.bucket, Key=self.key, UploadId=self.upload_id
+        return sync(
+            self.fs.loop,
+            self.s3_client.abort_multipart_upload,
+            Bucket=self.bucket,
+            Key=self.key,
+            UploadId=self.upload_id,
         )

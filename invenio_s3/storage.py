@@ -177,8 +177,9 @@ class S3FSFileStorage(PyFSFileStorage):
         if src.fileurl.startswith("s3://"):
             fs, path = self._get_fs()
             fs.copy(src.fileurl, path)
+            return path, None, None
         else:
-            super(S3FSFileStorage, self).copy(src, *args, **kwargs)
+            return super(S3FSFileStorage, self).copy(src, *args, **kwargs)
 
     @set_blocksize
     def save(self, *args, **kwargs):
