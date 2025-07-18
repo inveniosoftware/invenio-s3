@@ -144,7 +144,7 @@ class MultipartS3File:
 
         :param parts: The list of parts (as from self.get_parts), including checksums and etags.
         """
-        return sync(
+        response = sync(
             self.fs.loop,
             self.s3_client.complete_multipart_upload,
             Bucket=self.bucket,
@@ -156,6 +156,19 @@ class MultipartS3File:
                 ]
             },
         )
+
+        if not response.get("ETag", None):
+            # Fix for Ceph < v18.2.4, where ETag is empty in complete multipart responses
+            # The checksum is still computed and can be fetched by HEAD object request
+            etag = sync(
+                self.fs.loop,
+                self.s3_client.head_object,
+                Bucket=self.bucket,
+                Key=self.key,
+            ).get("ETag")
+            response["ETag"] = etag
+
+        return response
 
     def abort_multipart_upload(self):
         """Abort the multipart upload."""
