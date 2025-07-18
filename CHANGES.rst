@@ -7,6 +7,10 @@
 Changes
 =======
 
+Version 3.0.1 (released 2025-07-18)
+
+- multipart: fix upload complete etag on ceph
+
 Version 3.0.0 (released 2025-06-01)
 
 - Bump S3FS version (async) and update tests
