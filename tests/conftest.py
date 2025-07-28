@@ -25,6 +25,7 @@ def app_config(app_config):
     app_config["S3_ENDPOINT_URL"] = os.environ["S3_ENDPOINT_URL"]
     app_config["S3_ACCESS_KEY_ID"] = os.environ["S3_ACCESS_KEY_ID"]
     app_config["S3_SECRET_ACCESS_KEY"] = os.environ["S3_SECRET_ACCESS_KEY"]
+    app_config["S3_BUCKET"] = os.environ.get("S3_BUCKET", "default")
     return app_config
 
 
@@ -45,15 +46,15 @@ def s3fs(app_config):
 
 
 @pytest.fixture()
-def s3_bucket():
+def s3_bucket(app_config):
     """S3 test path."""
-    return "s3://default"
+    return f"s3://{app_config['S3_BUCKET']}"
 
 
 @pytest.fixture()
-def s3_path():
+def s3_path(s3_bucket):
     """S3 test path."""
-    return "s3://default/file.txt"
+    return f"{s3_bucket}/file.txt"
 
 
 @pytest.fixture(scope="function")

@@ -57,16 +57,31 @@ class MultipartS3File:
         :param max_parts: The maximum number of parts to list.
         :returns: The list of parts, including checksums and etags.
         """
-        ret = sync(
-            self.fs.loop,
-            self.s3_client.list_parts,
-            Bucket=self.bucket,
-            Key=self.key,
-            UploadId=self.upload_id,
-            MaxParts=max_parts,
-            PartNumberMarker=0,
-        )
-        return ret.get("Parts", [])
+        parts = []
+        list_parts_kwargs = {
+            "Bucket": self.bucket,
+            "Key": self.key,
+            "UploadId": self.upload_id,
+            "MaxParts": max_parts,
+        }
+
+        # S3 API on CEPH/Amazon returns at most 1000 parts per request,
+        # so we need to loop until we get all parts. Minio returns all parts
+        # in one request.
+        while True:
+            ret = sync(
+                self.fs.loop,
+                self.s3_client.list_parts,
+                **list_parts_kwargs,
+            )
+            if not ret.get("Parts"):
+                break
+            parts.extend(ret.get("Parts", []))
+            if not ret.get("IsTruncated", False):
+                # if the response is not truncated, finish listing
+                break
+            list_parts_kwargs["PartNumberMarker"] = ret["NextPartNumberMarker"]
+        return parts
 
     def upload_part(self, part_number, data):
         """Upload a part of the multipart upload. Will be used only in tests.
