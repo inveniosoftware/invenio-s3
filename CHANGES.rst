@@ -7,6 +7,10 @@
 Changes
 =======
 
+Version 3.0.2 (released 2025-08-04)
+
+- multipart: fix handling of multipart uploads with >1000 parts
+
 Version 3.0.1 (released 2025-07-18)
 
 - multipart: fix upload complete etag on ceph
