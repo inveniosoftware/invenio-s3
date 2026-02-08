@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: 2026 California Institute of Technology.
 # SPDX-FileCopyrightText: 2018, 2019 Esteban J. G. Gabancho.
 # SPDX-FileCopyrightText: 2024 Graz University of Technology.
 # SPDX-License-Identifier: MIT
@@ -6,6 +7,7 @@
 
 import mimetypes
 import unicodedata
+from time import time
 from urllib.parse import quote
 
 from flask import current_app
@@ -77,15 +79,7 @@ def redirect_stream(
     )
     headers["Location"] = url
 
-    # TODO: Set cache-control
-    # if not restricted:
-    #     rv.cache_control.public = True
-    #     cache_timeout = current_app.get_send_file_max_age(filename)
-    #     if cache_timeout is not None:
-    #         rv.cache_control.max_age = cache_timeout
-    #         rv.expires = int(time() + cache_timeout)
     # Construct response object.
-
     rv = current_app.response_class(
         url,
         status=302,
@@ -93,5 +87,14 @@ def redirect_stream(
         mimetype=mimetype,
         direct_passthrough=True,
     )
+
+    # Cache control: if the file is not restricted, we set caching to the
+    # presigned url expiration time
+    if not restricted:
+        rv.cache_control.public = True
+        cache_timeout = current_app.config["S3_URL_EXPIRATION"]
+        if cache_timeout is not None:
+            rv.cache_control.max_age = cache_timeout
+            rv.expires = int(time() + cache_timeout)
 
     return rv
