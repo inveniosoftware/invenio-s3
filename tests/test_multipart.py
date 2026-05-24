@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2025 Caltech.
+# SPDX-FileCopyrightText: 2025 Esteban J. G. Gabancho.
+# SPDX-License-Identifier: MIT
+
 from concurrent.futures import ThreadPoolExecutor
 
 import pytest
