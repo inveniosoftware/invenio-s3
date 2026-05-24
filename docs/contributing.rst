@@ -1,7 +1,6 @@
 ..
-    Copyright (C) 2018 Esteban J. G. Gabancho.
-    Invenio-S3 is free software; you can redistribute it and/or modify it
-    under the terms of the MIT License; see LICENSE file for more details.
+    SPDX-FileCopyrightText: 2018 Esteban J. G. Gabancho.
+    SPDX-License-Identifier: MIT
 
 
 .. include:: ../CONTRIBUTING.rst

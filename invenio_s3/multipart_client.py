@@ -1,9 +1,5 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2024 Miroslav Simek
-#
-# Invenio-S3 is free software; you can redistribute it and/or modify it
-# under the terms of the MIT License; see LICENSE file for more details.
+# SPDX-FileCopyrightText: 2024 Miroslav Simek
+# SPDX-License-Identifier: MIT
 
 
 """Low level client for S3 multipart uploads."""

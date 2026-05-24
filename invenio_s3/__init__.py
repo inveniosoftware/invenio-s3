@@ -1,11 +1,7 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2018, 2019, 2020 Esteban J. G. Gabancho.
-# Copyright (C) 2024 KTH Royal Institute of Technology.
-# Copyright (C) 2024 Graz University of Technology.
-#
-# Invenio-S3 is free software; you can redistribute it and/or modify it
-# under the terms of the MIT License; see LICENSE file for more details.
+# SPDX-FileCopyrightText: 2018, 2019, 2020 Esteban J. G. Gabancho.
+# SPDX-FileCopyrightText: 2024 KTH Royal Institute of Technology.
+# SPDX-FileCopyrightText: 2024-2026 Graz University of Technology.
+# SPDX-License-Identifier: MIT
 
 """S3 file storage support for Invenio.
 
