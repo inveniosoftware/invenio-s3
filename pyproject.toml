@@ -1,4 +1,70 @@
-[build-system]
-requires = ["setuptools", "wheel", "babel>2.8"]
-build-backend = "setuptools.build_meta"
+# SPDX-FileCopyrightText: 2018, 2019, 2020 Esteban J. G. Gabancho.
+# SPDX-FileCopyrightText: 2022-2026 Graz University of Technology.
+# SPDX-FileCopyrightText: 2024 KTH Royal Institute of Technology.
+# SPDX-FileCopyrightText: 2026 TU Wien.
+# SPDX-License-Identifier: MIT
 
+[project]
+name = "invenio-s3"
+description = "S3 file storage support for Invenio. "
+readme = "README.rst"
+requires-python = ">=3.9"
+license = "MIT"
+authors = [
+  { name = "Esteban J. G. Gabancho", email = "egabancho@gmail.com" },
+]
+keywords = [
+  "invenio",
+  "s3",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+]
+dependencies = [
+  "aiobotocore>=2.5.4,<3.0.0",
+  "invenio-files-rest>=6.0.0,<7.0.0",
+  "s3fs>=2025.3.2",
+]
+dynamic = ["version"]
+
+[project.urls]
+Repository = "https://github.com/inveniosoftware/invenio-s3"
+
+[project.entry-points."invenio_base.api_apps"]
+invenio_s3 = "invenio_s3:InvenioS3"
+
+[project.entry-points."invenio_base.apps"]
+invenio_s3 = "invenio_s3:InvenioS3"
+
+[project.optional-dependencies]
+tests = [
+  "invenio-app>=3.0.0,<4.0.0",
+  "invenio-base>=2.0.0,<3.0.0",
+  "invenio-db>=2.2.0,<3.0.0",
+  "pytest-black>=0.6.0",
+  "pytest-invenio>=4.0.0,<5.0.0",
+  "sphinx>=4.2.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "invenio_s3/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/invenio_s3",
+]
+
+[tool.isort]
+profile = "black"
+
+[tool.pydocstyle]
+add_ignore = "D401"
+
+[tool.pytest.ini_options]
+addopts = '--black --isort --pydocstyle --doctest-glob="*.rst" --doctest-modules --cov=invenio_s3 --cov-report=term-missing'
+testpaths = "tests invenio_s3"
+live_server_scope = "module"
