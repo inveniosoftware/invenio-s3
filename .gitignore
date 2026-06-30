@@ -64,3 +64,4 @@ target/
 .*.sw?
 
 .vscode/*
+uv.lock
