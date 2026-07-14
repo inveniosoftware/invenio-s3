@@ -252,21 +252,6 @@ class S3FSFileStorage(PyFSFileStorage):
             # Upload already gone from S3 (expired or never completed).
             # Treat as already aborted so callers can clean up the DB record.
 
-    def multipart_upload_exists(self, **multipart_metadata):
-        """Return True if the multipart upload ID is still active in S3.
-
-        :param multipart_metadata: The metadata returned by multipart_initialize_upload.
-        :returns: True if the upload is still active, False if it no longer exists.
-        """
-        try:
-            f = self.multipart_file(multipart_metadata["uploadId"])
-            f.get_parts(max_parts=1)
-            return True
-        except ClientError as e:
-            if e.response["Error"]["Code"] == "NoSuchUpload":
-                return False
-            raise
-
     def multipart_links(self, **multipart_metadata):
         """Generate links for the parts of the multipart upload.
 
