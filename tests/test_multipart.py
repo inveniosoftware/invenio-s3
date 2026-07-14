@@ -62,6 +62,9 @@ def test_multipart_abort(base_app, s3_storage):
 
     s3_storage.multipart_abort_upload(**upload_metadata)
 
+    # try the abort once again to make sure the second abort does not raise an error
+    s3_storage.multipart_abort_upload(**upload_metadata)
+
 
 def test_set_content_not_supported(base_app, s3_storage):
     part_size = 7 * MB
