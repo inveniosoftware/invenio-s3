@@ -1,10 +1,19 @@
 ..
     SPDX-FileCopyrightText: 2018, 2019, 2020 Esteban J. G. Gabancho.
     SPDX-FileCopyrightText: 2024-2026 Graz University of Technology.
+    SPDX-FileCopyrightText: 2026 TU Wien.
     SPDX-License-Identifier: MIT
 
 Changes
 =======
+
+Version v6.0.1 (released 2026-07-16)
+
+- tests: added duplicated multipart abort test
+- revert: removed multipart_upload_exists
+- fix: handle NoSuchUpload gracefully when aborting multipart upload
+- chore(setup): migrate from setuptools to hatchling
+- chore(cleanup): remove outdated and unnecessary file
 
 Version v6.0.0 (released 2026-06-16)
 
