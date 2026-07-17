@@ -7,6 +7,12 @@
 Changes
 =======
 
+
+Version v6.0.2 (released 2026-07-17)
+
+- fix: add cache-control for s3 presigned urls
+- fix(cache): mark restricted files as no-cache for cache-control
+
 Version v6.0.1 (released 2026-07-16)
 
 - tests: added duplicated multipart abort test
