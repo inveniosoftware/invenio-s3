@@ -6,6 +6,14 @@
 Changes
 =======
 
+
+Version 5.0.1 (released 2026-06-17)
+
+- fix(cache): mark restricted files as no-cache for cache-control
+- fix: add cache-control for s3 presigned urls
+- fix: handle NoSuchUpload gracefully when aborting multipart upload
+- chore(licenses): update license headers to use SPDX
+
 Version v5.0.0 (released 2026-05-28)
 
 - chore(setup): bump dependencies
