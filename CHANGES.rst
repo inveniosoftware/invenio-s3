@@ -6,6 +6,13 @@
 Changes
 =======
 
+Version 3.0.3 (released 2026-06-17)
+
+- fix(cache): mark restricted files as no-cache for cache-control
+- fix: add cache-control for s3 presigned urls
+- fix: handle NoSuchUpload gracefully when aborting multipart upload
+- chore(licenses): update license headers to use SPDX
+
 Version 3.0.2 (released 2025-08-04)
 
 - multipart: fix handling of multipart uploads with >1000 parts
