@@ -2,11 +2,15 @@
     SPDX-FileCopyrightText: 2018, 2019, 2020 Esteban J. G. Gabancho.
     SPDX-FileCopyrightText: 2024-2026 Graz University of Technology.
     SPDX-FileCopyrightText: 2026 TU Wien.
+    SPDX-FileCopyrightText: 2026 KTH Royal Institute of Technology.
     SPDX-License-Identifier: MIT
 
 Changes
 =======
 
+Version v6.0.3 (released 2026-09-17)
+
+- fix(tests): changed minio to rustfs
 
 Version v6.0.2 (released 2026-07-17)
 

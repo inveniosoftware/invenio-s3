@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2018, 2019, 2020 Esteban J. G. Gabancho.
-# SPDX-FileCopyrightText: 2024 KTH Royal Institute of Technology.
+# SPDX-FileCopyrightText: 2024-2026 KTH Royal Institute of Technology.
 # SPDX-FileCopyrightText: 2024-2026 Graz University of Technology.
 # SPDX-FileCopyrightText: 2026 TU Wien.
 # SPDX-License-Identifier: MIT
@@ -43,7 +43,7 @@ more detailed description in :any:`configuration`.
 from .ext import InvenioS3
 from .storage import S3FSFileStorage, s3fs_storage_factory
 
-__version__ = "6.0.2"
+__version__ = "6.0.3"
 
 __all__ = (
     "__version__",
