@@ -41,7 +41,7 @@ fi
 
 python -m check_manifest
 python -m sphinx.cmd.build -qnNW docs docs/_build/html
-eval "$(docker-services-cli up --s3 ${S3:-minio} --env)"
+eval "$(docker-services-cli up --s3 ${S3:-rustfs} --env)"
 python -m pytest -k "not manual" ${pytest_args[@]+"${pytest_args[@]}"}
 tests_exit_code=$?
 exit "$tests_exit_code"
