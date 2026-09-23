@@ -43,12 +43,14 @@ class S3FSFileStorage(PyFSFileStorage):
         self.block_size = current_app.config["S3_DEFAULT_BLOCK_SIZE"]
         super(S3FSFileStorage, self).__init__(fileurl, **kwargs)
 
-    def _get_fs(self, *args, **kwargs):
+    def _get_fs(self, *args, external=False, **kwargs):
         """Get PyFilesystem instance and S3 real path."""
         if not self.fileurl.startswith("s3://"):
             return super(S3FSFileStorage, self)._get_fs(*args, **kwargs)
 
         info = current_app.extensions["invenio-s3"].init_s3fs_info
+        if external and current_app.config.get("S3_EXTERNAL_ENDPOINT_URL"):
+            info = current_app.extensions["invenio-s3"].external_init_s3fs_info
         fs = s3fs.S3FileSystem(default_block_size=self.block_size, **info)
 
         return (fs, self.fileurl)
@@ -148,7 +150,7 @@ class S3FSFileStorage(PyFSFileStorage):
     ):
         """Send the file to the client."""
         try:
-            fs, path = self._get_fs()
+            fs, path = self._get_fs(external=True)
             s3_url_builder = partial(
                 fs.url, path, expires=current_app.config["S3_URL_EXPIRATION"]
             )
@@ -259,9 +261,14 @@ class S3FSFileStorage(PyFSFileStorage):
             and the metadata returned by the multipart_set_content for each part.
         :returns: a dictionary of name of the link to invenio_records_resources.services.base.links.Link
         """
-        return self.multipart_file(multipart_metadata["uploadId"]).get_part_links(
+        multipart_file = self.multipart_file(multipart_metadata["uploadId"])
+        presign_fs = multipart_file.fs
+        if current_app.config.get("S3_EXTERNAL_ENDPOINT_URL"):
+            presign_fs, _ = self._get_fs(external=True)
+        return multipart_file.get_part_links(
             int(multipart_metadata["parts"]),
             current_app.config["S3_UPLOAD_URL_EXPIRATION"],
+            presign_fs=presign_fs,
         )
 
 

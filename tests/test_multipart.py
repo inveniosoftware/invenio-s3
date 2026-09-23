@@ -3,10 +3,56 @@
 # SPDX-License-Identifier: MIT
 
 from concurrent.futures import ThreadPoolExecutor
+from types import SimpleNamespace
+from unittest.mock import patch
 
 import pytest
 
 MB = 2**20
+
+
+def test_multipart_links_use_external_filesystem_for_signing(base_app, s3_storage):
+    """Test presigning uses the external filesystem and operations stay internal."""
+    endpoint = "https://external.example.com"
+    internal_fs, _ = s3_storage._get_fs()
+    multipart_metadata = {"parts": 1, "part_size": 1, "size": 1}
+
+    # Keep the external signer stubbed; internal multipart calls use the test S3.
+    async def generate_presigned_url(operation, Params, ExpiresIn):
+        return f"{endpoint}/signed-part"
+
+    external_fs = SimpleNamespace(
+        loop=internal_fs.loop,
+        s3=SimpleNamespace(generate_presigned_url=generate_presigned_url),
+    )
+    filesystem_calls = []
+    get_fs = s3_storage._get_fs
+
+    def track_get_fs(*args, external=False, **kwargs):
+        filesystem_calls.append(external)
+        if external:
+            return external_fs, s3_storage.fileurl
+        return get_fs(*args, **kwargs)
+
+    with patch.dict(base_app.config, {"S3_EXTERNAL_ENDPOINT_URL": endpoint}):
+        with patch.object(s3_storage, "_get_fs", track_get_fs):
+            multipart_metadata |= s3_storage.multipart_initialize_upload(
+                **multipart_metadata
+            )
+            try:
+                multipart_file = s3_storage.multipart_file(
+                    multipart_metadata["uploadId"]
+                )
+                assert multipart_file.get_parts(max_parts=1) == []
+
+                links = s3_storage.multipart_links(**multipart_metadata)["parts"]
+            finally:
+                s3_storage.multipart_abort_upload(**multipart_metadata)
+
+    assert len(links) == 1
+    assert links[0]["part"] == 1
+    assert links[0]["url"].startswith(endpoint)
+    assert filesystem_calls == [False, False, False, True, False]
 
 
 def test_multipart_flow(base_app, s3_storage):

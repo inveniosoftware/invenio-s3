@@ -111,14 +111,22 @@ class MultipartS3File:
                 ret[k] = part[k]
         return ret
 
-    def get_part_links(self, max_parts, url_expiration):
+    def get_part_links(self, max_parts, url_expiration, presign_fs=None):
         """Generate pre-signed URLs for the parts of the multipart upload.
 
         :param max_parts: The maximum number of parts to list.
         :param url_expiration: The expiration time of the URLs in seconds
+        :param presign_fs: Optional S3FS instance used only for presigning. The
+            current filesystem is used when omitted.
 
         :returns: The list of parts with pre-signed URLs and expiration times.
         """
+        if presign_fs is None:
+            presign_fs = self.fs
+            presign_client = self.s3_client
+        else:
+            presign_client = presign_fs.s3
+
         # AWS S3 requires the expiration timestamp to be in UTC.
         expiration = datetime.now(timezone.utc) + timedelta(seconds=url_expiration)
 
@@ -133,8 +141,8 @@ class MultipartS3File:
                 {
                     "part": part + 1,
                     "url": sync(
-                        self.fs.loop,
-                        self.s3_client.generate_presigned_url,
+                        presign_fs.loop,
+                        presign_client.generate_presigned_url,
                         "upload_part",
                         Params={
                             "Bucket": self.bucket,

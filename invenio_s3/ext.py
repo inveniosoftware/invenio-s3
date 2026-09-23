@@ -20,6 +20,17 @@ class InvenioS3(object):
     @cached_property
     def init_s3fs_info(self):
         """Gather all the information needed to start the S3FSFileSystem."""
+        return self._init_s3fs_info("S3_ENDPOINT_URL")
+
+    @cached_property
+    def external_init_s3fs_info(self):
+        """Gather the information needed for externally signed S3 URLs."""
+        if not current_app.config.get("S3_EXTERNAL_ENDPOINT_URL"):
+            return self.init_s3fs_info
+        return self._init_s3fs_info("S3_EXTERNAL_ENDPOINT_URL")
+
+    def _init_s3fs_info(self, endpoint_config_key):
+        """Gather S3FS configuration using the selected endpoint."""
         s3_config_extra = current_app.config.get("S3_CONFIG_EXTRA", {})
         info = dict(
             key=current_app.config.get("S3_ACCESS_KEY_ID", ""),
@@ -36,7 +47,7 @@ class InvenioS3(object):
             },
         )
 
-        s3_endpoint = current_app.config.get("S3_ENDPOINT_URL", None)
+        s3_endpoint = current_app.config.get(endpoint_config_key, None)
         if s3_endpoint:
             info["client_kwargs"]["endpoint_url"] = s3_endpoint
 

@@ -92,3 +92,21 @@ See `Amazon Boto3 documentation on presigned URLs
 <https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3.html#S3.Client.generate_presigned_url>`_
 for more information.
 """
+
+# S3_EXTERNAL_ENDPOINT_URL = None
+"""Optional public S3-compatible endpoint for client-facing signed URLs.
+
+Set this in ``invenio.cfg`` when ``S3_ENDPOINT_URL`` is private or otherwise
+unreachable by clients. This endpoint is used only when generating download
+URLs and multipart-part upload URLs. S3 API requests, including multipart
+creation, part listing, completion and abort, continue to use
+``S3_ENDPOINT_URL``.
+
+The external endpoint must address the same S3 service and accept signatures
+made with the configured credentials, region and signature version. Configure
+its scheme, hostname and port as clients should use them, and make it reachable
+from those clients. Clients must trust its TLS certificate; browser-based
+multipart uploads also require suitable CORS rules on the S3 service.
+
+If unset, client-facing URLs are generated using ``S3_ENDPOINT_URL``.
+"""
