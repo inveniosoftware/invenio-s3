@@ -31,12 +31,14 @@ more detailed description in :any:`configuration`.
 .. note::
 
   This module doesn't create S3 buckets automatically, so before starting they
-  need to be created.
+  need to be created, e.g. with ``invenio s3 create-bucket my-bucket``.
 
   You might also want to set the correct `CORS configuration
   <https://docs.aws.amazon.com/AmazonS3/latest/dev/cors.html>`_  so files can
   be used by your interface for things like previewing a PDF with some
-  Javascript library.
+  Javascript library. Buckets created with ``invenio s3 create-bucket`` get
+  the CORS rules from ``S3_BUCKET_CORS_RULES``, which by default allow ``GET``
+  requests from any origin.
 
 """
 

@@ -44,6 +44,10 @@ class InvenioS3(object):
         if region_name:
             info["client_kwargs"]["region_name"] = region_name
 
+        ca_bundle = current_app.config.get("S3_CA_BUNDLE", None)
+        if ca_bundle:
+            info["client_kwargs"]["verify"] = ca_bundle
+
         return info
 
     def init_app(self, app):
