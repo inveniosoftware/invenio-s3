@@ -17,9 +17,13 @@ def test_init(appctx):
 
     appctx.config["S3_ENDPOINT_URL"] = "https://example.com:1234"
     appctx.config["S3_REGION_NAME"] = "eu-west-1"
+    appctx.config["S3_CA_BUNDLE"] = "/etc/ssl/certs/ca-bundle.pem"
     s3_connection_info = appctx.extensions["invenio-s3"].init_s3fs_info
     assert (
         s3_connection_info["client_kwargs"]["endpoint_url"]
         == "https://example.com:1234"
     )
     assert s3_connection_info["client_kwargs"]["region_name"] == "eu-west-1"
+    assert (
+        s3_connection_info["client_kwargs"]["verify"] == "/etc/ssl/certs/ca-bundle.pem"
+    )
