@@ -30,6 +30,9 @@ dynamic = ["version"]
 [project.urls]
 Repository = "https://github.com/inveniosoftware/invenio-s3"
 
+[project.entry-points."flask.commands"]
+s3 = "invenio_s3.cli:s3"
+
 [project.entry-points."invenio_base.api_apps"]
 invenio_s3 = "invenio_s3:InvenioS3"
 
