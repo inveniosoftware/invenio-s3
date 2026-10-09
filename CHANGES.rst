@@ -8,6 +8,10 @@
 Changes
 =======
 
+Version v6.1.0 (released 2026-10-12)
+
+- feat: add cli to create S3 buckets and cert bundle config
+
 Version v6.0.3 (released 2026-09-17)
 
 - fix(tests): changed minio to rustfs
