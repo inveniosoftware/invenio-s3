@@ -6,6 +6,14 @@
 Changes
 =======
 
+Version 3.1.0 (released 2026-10-13)
+
+- fix(tests): changed minio to rustfs
+- tests: enable CI on maint and feature branches
+- chore(cleanup): remove outdated and unnecessary file
+- chore(setup): migrate from setuptools to hatchling
+- feat: add cli to create S3 buckets and cert bundle config
+
 Version 3.0.3 (released 2026-06-17)
 
 - fix(cache): mark restricted files as no-cache for cache-control
