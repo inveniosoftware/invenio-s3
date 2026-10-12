@@ -7,6 +7,12 @@
 Changes
 =======
 
+Version v5.1.0 (released 2026-10-12)
+
+- feat: add cli to create S3 buckets and cert bundle config
+- chore(setup): migrate from setuptools to hatchling
+- chore(cleanup): remove outdated and unnecessary file
+
 Version v5.0.2 (released 2026-09-17)
 
 - fix(tests): changed minio to rustfs
