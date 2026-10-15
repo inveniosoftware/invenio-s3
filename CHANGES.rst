@@ -7,6 +7,10 @@
 Changes
 =======
 
+Version v5.1.1 (released 2026-10-15)
+
+- fix(deps): restore files-rest v5 compatibility
+
 Version v5.1.0 (released 2026-10-12)
 
 - feat: add cli to create S3 buckets and cert bundle config
