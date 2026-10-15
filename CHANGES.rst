@@ -6,6 +6,10 @@
 Changes
 =======
 
+Version 3.1.0 (released 2026-10-14)
+
+- fix(deps): restore correct files-rest v3 version
+
 Version 3.1.0 (released 2026-10-13)
 
 - fix(tests): changed minio to rustfs
