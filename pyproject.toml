@@ -8,7 +8,7 @@
 name = "invenio-s3"
 description = "S3 file storage support for Invenio. "
 readme = "README.rst"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 license = "MIT"
 authors = [
   { name = "Esteban J. G. Gabancho", email = "egabancho@gmail.com" },
